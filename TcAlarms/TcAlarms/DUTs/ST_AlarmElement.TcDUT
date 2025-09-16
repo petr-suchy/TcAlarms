@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="ST_AlarmElement" Id="{4a8a96ce-8337-46cb-b5d5-6e8afdba43f8}">
+    <Declaration><![CDATA[TYPE ST_AlarmElement :
+STRUCT
+	nAlarmContextId		: DINT := ALARM_INVALID_CONTEXT_ID;
+	nAlarmId			: DINT;
+	aArgStack			: ARRAY[1..ALARM_ARG_STACK_SIZE] OF BYTE;
+	bCanByAcknowledged	: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

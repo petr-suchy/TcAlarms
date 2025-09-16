@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="A_INT" Id="{d3c2d0e4-a1a1-4b34-933b-f53443c0192e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION A_INT : ST_Arg
+VAR_INPUT
+	nNumber	: REFERENCE TO INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF __ISVALIDREF(nNumber) THEN
+	A_INT.eType := E_ArgType.IntArg;
+	A_INT.pData := ADR(nNumber);
+	A_INT.nSize := SIZEOF(INT);
+END_IF
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

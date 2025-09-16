@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_VFormatStr" Id="{e1e06578-2e60-4d35-88f4-cf3c69ab23d7}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_VFormatStr
+VAR_INPUT
+	sFormat			: STRING(ALARM_TEXT_SIZE);
+	pArgStack		: POINTER TO BYTE;
+	nStackSize		: DINT;
+END_VAR
+VAR_OUTPUT
+	sOutput			: STRING(ALARM_TEXT_SIZE);
+END_VAR
+VAR
+	fbRdArgStack		: FB_RdArgStack(0, 0);
+	nFormatLength		: INT;
+	nCurrFormatIndex	: INT;
+	nCurrOutputIndex	: INT;
+	i					: INT;
+	c					: BYTE;
+END_VAR
+VAR CONSTANT
+	SPEC_CHAR	: BYTE := 37;	// '%'
+	SPEC_D		: BYTE := 100;	// '%d'
+	SPEC_F		: BYTE := 102;	// '%f'
+	SPEC_S		: BYTE := 115;	// '%s'
+	SPEC_TIME	: BYTE := 84;	// %T
+	SPEC_DATE	: BYTE := 68;	// %D
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbRdArgStack.SetMemory(pArgStack, nStackSize);
+// Zero output string
+MEMSET(destAddr:= ADR(sOutput), fillByte:= 0, n:= SIZEOF(sOutput));
+// Get format string length
+nFormatLength := LEN(sFormat);
+
+nCurrFormatIndex := 0;
+nCurrOutputIndex := 0;
+
+WHILE NOT AtFmtEnd DO
+	
+	c := FmtChar;
+	NextFmtChar();
+	
+	IF c = SPEC_CHAR THEN
+		
+		IF AtFmtEnd THEN
+			PutChar(c);
+			EXIT;
+		END_IF
+		
+		c := FmtChar;
+		NextFmtChar();
+	
+		CASE c OF
+			SPEC_D:
+				IF fbRdArgStack.IsIntArg THEN
+					PutStr(DINT_TO_STRING(fbRdArgStack.GetIntArg()));
+				ELSIF fbRdArgStack.IsUIntArg THEN
+					PutStr(UDINT_TO_STRING(fbRdArgStack.GetUIntArg()));
+				ELSE
+					PutStr('???');
+				END_IF
+				fbRdArgStack.NextArg();
+			SPEC_F:
+				IF fbRdArgStack.IsFloatArg THEN
+					PutStr(LREAL_TO_STRING(fbRdArgStack.GetFloatArg()));
+				ELSE
+					PutStr('???');
+				END_IF
+				fbRdArgStack.NextArg();
+			SPEC_S:
+				IF fbRdArgStack.IsString THEN
+					PutStr(fbRdArgStack.GetStringArg());
+				ELSE
+					PutStr('???');
+				END_IF
+			SPEC_TIME:
+				IF fbRdArgStack.IsTime THEN
+					PutStr(TIME_TO_STRING(fbRdArgStack.GetTimeArg()));
+				ELSE
+					PutStr('???');
+				END_IF
+			SPEC_DATE:
+				IF fbRdArgStack.IsDate THEN
+					PutStr(DATE_TO_STRING(fbRdArgStack.GetDateArg()));
+				ELSE
+					PutStr('???');
+				END_IF			
+		ELSE
+			IF c = SPEC_CHAR THEN // %% escape sequence?
+				PutChar(c);
+			ELSE
+				PutChar(SPEC_CHAR);
+				PutChar(c);
+			END_IF
+		END_CASE
+	ELSE
+		PutChar(c);
+	END_IF
+END_WHILE
+
+
+]]></ST>
+    </Implementation>
+    <Property Name="AtFmtEnd" Id="{11da5d1a-43a4-49cc-96cd-82b84905c594}">
+      <Declaration><![CDATA[PROPERTY PRIVATE AtFmtEnd : BOOL]]></Declaration>
+      <Get Name="Get" Id="{b5ce0dc0-2eae-443b-a034-59c7c6d102f9}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[AtFmtEnd := nCurrFormatIndex >= nFormatLength;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="FmtChar" Id="{7c75b97f-dce4-4eb0-91cc-157c47ae4223}">
+      <Declaration><![CDATA[PROPERTY PRIVATE FmtChar : BYTE]]></Declaration>
+      <Get Name="Get" Id="{e01712ab-2b4f-417c-a0ec-af6678e4b372}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[FmtChar := sFormat[nCurrFormatIndex];
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="NextFmtChar" Id="{1c40cf68-c45b-49c7-84c2-03d624e16436}">
+      <Declaration><![CDATA[METHOD PRIVATE NextFmtChar
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF nCurrFormatIndex < nFormatLength THEN
+	nCurrFormatIndex := nCurrFormatIndex + 1;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PutChar" Id="{eb8931aa-0e28-452e-8931-488be0f8fb85}">
+      <Declaration><![CDATA[METHOD PRIVATE PutChar
+VAR_INPUT
+	nOutChar : BYTE;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF nCurrOutputIndex < ALARM_TEXT_SIZE THEN
+	sOutput[nCurrOutputIndex] := nOutChar;
+	nCurrOutputIndex := nCurrOutputIndex + 1;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PutStr" Id="{426bba9e-7651-47bb-9a40-6c30f681f788}">
+      <Declaration><![CDATA[METHOD PRIVATE PutStr
+VAR_INPUT
+	sOutStr : STRING(ALARM_TEXT_SIZE);
+END_VAR
+VAR
+	nOutStrLen	: INT;
+	i			: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[nOutStrLen := LEN(sOutStr);
+
+i := 0;
+WHILE i < nOutStrLen AND nCurrOutputIndex < ALARM_TEXT_SIZE DO
+	sOutput[nCurrOutputIndex] := sOutStr[i];
+	i := i + 1;
+	nCurrOutputIndex := nCurrOutputIndex + 1;
+END_WHILE
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

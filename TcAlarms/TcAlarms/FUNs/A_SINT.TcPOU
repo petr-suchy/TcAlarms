@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="A_SINT" Id="{992a1ab8-5133-424e-abd5-4e1744f29342}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION A_SINT : ST_Arg
+VAR_INPUT
+	nNumber	: REFERENCE TO SINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF __ISVALIDREF(nNumber) THEN
+	A_SINT.eType := E_ArgType.SIntArg;
+	A_SINT.pData := ADR(nNumber);
+	A_SINT.nSize := SIZEOF(SINT);
+END_IF
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

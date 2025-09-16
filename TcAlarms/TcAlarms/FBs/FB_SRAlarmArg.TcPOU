@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_SRAlarmArg" Id="{d3030c0a-36e2-424e-a0fb-40956012db8c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_SRAlarmArg EXTENDS FB_SRAlarm
+VAR_INPUT
+    arg1		: ST_Arg;
+    arg2		: ST_Arg;
+	arg3		: ST_Arg;
+	arg4		: ST_Arg;
+	arg5		: ST_Arg;
+END_VAR
+VAR
+	aArgStack			: ARRAY[1..ALARM_ARG_STACK_SIZE] OF BYTE;
+	fbWritableArgStack	: FB_WrArgStack(ADR(aArgStack), ALARM_ARG_STACK_SIZE);
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[SUPER^();
+]]></ST>
+    </Implementation>
+    <Property Name="ArgStackMemoryPointer" Id="{46cd283c-2405-40bb-aee3-1cc3aa092b37}">
+      <Declaration><![CDATA[PROPERTY ArgStackMemoryPointer : POINTER TO BYTE]]></Declaration>
+      <Get Name="Get" Id="{dc1e9a1a-922e-4b9c-8eb5-12ac346ccae3}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ArgStackMemoryPointer := fbWritableArgStack.MemoryPointer;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="ArgStackMemorySize" Id="{fccf0028-91bd-4b24-9234-390cf7c2d8e4}">
+      <Declaration><![CDATA[PROPERTY ArgStackMemorySize : DINT]]></Declaration>
+      <Get Name="Get" Id="{6ae3f2bb-3206-4016-8b10-5af5d273bcad}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ArgStackMemorySize := fbWritableArgStack.MemorySize;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="ClearArgStack" Id="{3c1cd89e-a3af-4573-8c16-360c7d000724}">
+      <Declaration><![CDATA[METHOD PROTECTED  ClearArgStack
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbWritableArgStack.Clear();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CopyArgsToStack" Id="{ce5ef490-0ad7-4008-9974-8150973bd8e1}">
+      <Declaration><![CDATA[METHOD PROTECTED CopyArgsToStack
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbWritableArgStack.AddArg(arg1);
+fbWritableArgStack.AddArg(arg2);
+fbWritableArgStack.AddArg(arg3);
+fbWritableArgStack.AddArg(arg4);
+fbWritableArgStack.AddArg(arg5);
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

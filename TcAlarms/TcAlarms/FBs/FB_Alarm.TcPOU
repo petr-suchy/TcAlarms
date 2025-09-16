@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_Alarm" Id="{cd7d921d-0cdd-4afc-8993-e9236f1ce3b5}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Alarm EXTENDS FB_AlarmBase
+VAR_INPUT
+	bEnable				: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[bActive := bEnable;
+
+SUPER^();
+]]></ST>
+    </Implementation>
+    <Property Name="ArgStackMemoryPointer" Id="{525c97dd-552f-4af1-8b84-cc7a352d131d}">
+      <Declaration><![CDATA[PROPERTY ArgStackMemoryPointer : POINTER TO BYTE]]></Declaration>
+      <Get Name="Get" Id="{32102f1a-8ead-4711-ba95-0849989a0837}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ArgStackMemoryPointer := 0;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="ArgStackMemorySize" Id="{f05d1709-c924-4dce-bd0a-6bc6e39aef02}">
+      <Declaration><![CDATA[PROPERTY ArgStackMemorySize : DINT]]></Declaration>
+      <Get Name="Get" Id="{0e2403c8-7e80-4a45-812a-245642e865a7}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ArgStackMemorySize := 0;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="ClearArgStack" Id="{e19c0412-1b71-46c0-8417-7443def4245b}">
+      <Declaration><![CDATA[METHOD PROTECTED  ClearArgStack
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Do nothing
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CopyArgsToStack" Id="{66d5f472-79b2-4d41-803a-d0e0ed4c405c}">
+      <Declaration><![CDATA[METHOD PROTECTED CopyArgsToStack
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Do nothing
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

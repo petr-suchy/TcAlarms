@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_SRAlarm" Id="{45bb9f76-c2ac-4273-b2d4-b673bb9a0f2c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_SRAlarm EXTENDS FB_AlarmBase
+VAR_INPUT
+	bSet					: BOOL;
+	bReset					: BOOL;
+END_VAR
+VAR
+	fbSetRTrig				: R_TRIG;
+	fbSetFTrig				: F_TRIG;
+	fbAckRTrig				: R_TRIG;
+END_VAR
+VAR_TEMP
+	bThisAlarmSelected		: BOOL;
+	bAck					: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbSetRTrig(CLK := bSet);
+fbSetFTrig(CLK := bSet);
+
+fbAckRTrig(CLK := iAlarmContext.Acknowledge);
+
+IF fbSetRTrig.Q THEN
+	iAlarmContext.EnableAcknowledge(nAlarmContextId, FALSE);
+END_IF
+
+IF fbSetFTrig.Q THEN
+	iAlarmContext.EnableAcknowledge(nAlarmContextId, TRUE);
+END_IF
+
+bThisAlarmSelected := iAlarmContext.SelectedAlarmContextId <> ALARM_INVALID_CONTEXT_ID AND
+	nAlarmContextId <> ALARM_INVALID_CONTEXT_ID AND
+	iAlarmContext.SelectedAlarmContextId = nAlarmContextId;
+	
+bAck := bThisAlarmSelected AND fbAckRTrig.Q;
+
+bActive := (NOT bReset AND NOT bAck AND bActive) OR bSet;
+
+SUPER^();
+]]></ST>
+    </Implementation>
+    <Property Name="ArgStackMemoryPointer" Id="{061a69c4-944e-4d0a-a770-a48d503e36d6}">
+      <Declaration><![CDATA[PROPERTY ArgStackMemoryPointer : POINTER TO BYTE]]></Declaration>
+      <Get Name="Get" Id="{76da89dc-b20a-458a-91ff-eb7160c72dc2}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ArgStackMemoryPointer := 0;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="ArgStackMemorySize" Id="{ce492647-c1b1-4e4c-8df4-e89f72b98e2f}">
+      <Declaration><![CDATA[PROPERTY ArgStackMemorySize : DINT]]></Declaration>
+      <Get Name="Get" Id="{6352f1f8-46de-4bd0-87d2-4d81c3ad9a20}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ArgStackMemorySize := 0;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="ClearArgStack" Id="{c4c5d467-dffb-41bb-be6f-9a38b3bc597d}">
+      <Declaration><![CDATA[METHOD PROTECTED  ClearArgStack
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Do nothing
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CopyArgsToStack" Id="{185a466b-e503-4527-9e7c-4eca1b3d7041}">
+      <Declaration><![CDATA[METHOD PROTECTED CopyArgsToStack
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Do nothing
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_WrArgStack" Id="{fa104e69-e411-49f9-8e77-0809db81c1b8}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_WrArgStack EXTENDS FB_ArgStack
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="AddArg" Id="{2c773816-07c9-4586-9322-a0e03c8d12f3}">
+      <Declaration><![CDATA[METHOD PUBLIC AddArg : DINT
+VAR_INPUT
+	stArg : ST_Arg;
+END_VAR
+VAR
+	eArgType				: E_ArgType;
+	nArgSize				: BYTE;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Return zero if there is not enough space to write argument
+AddArg := 0;
+
+// Is there enough space to write the entire argument?
+IF ARG_HEADER_SIZE + stArg.nSize <= RemainingMemorySize THEN
+	nArgSize := stArg.nSize;
+ELSE
+	// Can a string argument be truncated?
+	IF stArg.eType = E_ArgType.StringArg AND RemainingMemorySize >= ARG_HEADER_SIZE THEN
+		nArgSize := DINT_TO_BYTE(RemainingMemorySize - ARG_HEADER_SIZE);
+	ELSE
+		RETURN;
+	END_IF
+END_IF
+
+// Is a pointer to the argument data provided?
+IF stArg.pData <> 0 THEN
+	eArgType := stArg.eType;
+ELSE
+	// Write void argument to the stack memory
+	eArgType := E_ArgType.VoidArg;
+	nArgSize := 0;
+END_IF
+
+// Write argument type and its size to the stack memory
+ArgType := eArgType;
+ArgSize := nArgSize;
+
+// Write argument data to the stack memory
+F_SAFE_MEMCPY(
+	destAddr:= ArgDataPointer,
+	nDestSize:= MemorySize - ArgDataOffset,
+	srcAddr:= stArg.pData,
+	nSrcSize:= stArg.nSize);
+	
+// Add the header length and argument size to the current position in the stack memory
+nCurrOfsetInStack := nCurrOfsetInStack + ARG_HEADER_SIZE + nArgSize;
+
+// Return number of bytes written to the stack memory
+AddArg := ARG_HEADER_SIZE + nArgSize;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="BytesWritten" Id="{7a6983f8-22ff-484c-b7c1-f705c14f224c}">
+      <Declaration><![CDATA[PROPERTY PUBLIC BytesWritten : DINT]]></Declaration>
+      <Get Name="Get" Id="{eca6a88d-b326-4e7d-adf5-fcb352c36e73}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[BytesWritten := UsedMemorySize;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="IsFull" Id="{3f3ab186-adde-4c65-8542-67218e6173f4}">
+      <Declaration><![CDATA[PROPERTY IsFull : BOOL]]></Declaration>
+      <Get Name="Get" Id="{3cc20e3e-e253-487a-97d0-58d7116c4462}">
+        <Declaration><![CDATA[]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsFull := AtEndOfMemory;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="A_TIME" Id="{9e666b4c-d7c0-48d2-bd36-5d6a42be3d47}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION A_TIME : ST_Arg
+VAR_INPUT
+	obj	: REFERENCE TO TIME;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF __ISVALIDREF(obj) THEN
+	A_TIME.eType := E_ArgType.TimeArg;
+	A_TIME.pData := ADR(obj);
+	A_TIME.nSize := SIZEOF(TIME);
+END_IF
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

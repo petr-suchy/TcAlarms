@@ -1,0 +1,358 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_AlarmContext" Id="{0b33e88a-4669-4105-92cc-4795ebc0bf2c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_AlarmContext IMPLEMENTS I_AlarmContext
+VAR_INPUT
+	bEnable						: BOOL;
+	bFirstAlarm					: BOOL;
+	bLastAlarm					: BOOL;
+	bPrevAlarm					: BOOL;
+	bNextAlarm					: BOOL;
+	bAcknowledge				: BOOL;
+END_VAR
+VAR_OUTPUT
+	bActive						: BOOL;
+	nNumOfDisplayedAlarms		: DINT;
+END_VAR
+VAR_IN_OUT
+	aAlarmPage					: ARRAY[*] OF ST_AlarmPageRow;
+	nSelectedAlarm				: DINT;
+END_VAR
+VAR
+	pAlarmArray					: POINTER TO ST_AlarmElement;
+	nMaxNumOfAlarms				: DINT;
+	iAlarmTextList				: I_AlarmTextList;
+	nNumOfAlarms				: DINT;
+	nNextContextId				: DINT := ALARM_INVALID_CONTEXT_ID + 1;
+	nSelectedAlarmContextId		: DINT := ALARM_INVALID_CONTEXT_ID;
+	fbEnableFTrig				: F_TRIG;
+	fbFirstAlarmRTrig			: R_TRIG;
+	fbLastAlarmRTrig			: R_TRIG;
+	fbPrevAlarmRTrig			: R_TRIG;
+	fbNextAlarmRTrig			: R_TRIG;
+	fbVFormatStr				: FB_VFormatStr;
+	// Index of the first alarm in the alarm array to be displayed
+	nFirstAlarmToDisplay		: DINT;
+END_VAR
+VAR_TEMP
+	nPageLBound					: DINT;
+	nPageUBound					: DINT;
+	nPageSize					: DINT;
+	nActualNumOfAlarms			: DINT;
+	nSelectedAlarmOffset		: DINT;
+	stCurrAlarm					: REFERENCE TO ST_AlarmElement;
+	stCurrPageRow				: REFERENCE TO ST_AlarmPageRow;
+	i							: DINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[bActive := bEnable;
+nSelectedAlarmContextId := ALARM_INVALID_CONTEXT_ID;
+
+fbEnableFTrig(CLK := bEnable);
+
+fbFirstAlarmRTrig(CLK := bFirstAlarm);
+fbLastAlarmRTrig(CLK := bLastAlarm);
+fbPrevAlarmRTrig(CLK := bPrevAlarm);
+fbNextAlarmRTrig(CLK := bNextAlarm);
+
+// The first index in the output array
+nPageLBound := LOWER_BOUND(aAlarmPage, 1);
+// The last index in the output array
+nPageUBound := UPPER_BOUND(aAlarmPage, 1);
+// Size of the output array
+nPageSize := nPageUBound - nPageLBound + 1;
+
+IF fbEnableFTrig.Q THEN
+	// Reset FB output when enable is lost
+	FOR i := nPageLBound TO nPageUBound DO
+		ClearPageRow(i);
+	END_FOR
+	nNumOfDisplayedAlarms := 0;
+END_IF
+
+IF NOT bEnable THEN
+	RETURN;
+END_IF
+
+// Restrict index to the lower limit
+nSelectedAlarm := MAX(nPageLBound, nSelectedAlarm);
+// Restrict index to the upper limit
+nSelectedAlarm := MIN(nPageUBound, nSelectedAlarm);
+
+// Go to the first alarm
+IF fbFirstAlarmRTrig.Q THEN
+	nFirstAlarmToDisplay := 0;
+	nSelectedAlarm := nPageLBound;
+END_IF
+
+// Go to the last alarm
+IF fbLastAlarmRTrig.Q THEN
+	nFirstAlarmToDisplay := (nNumOfAlarms / nPageSize) * nPageSize;
+	nSelectedAlarm := MAX(nNumOfAlarms MOD nPageSize, 1);
+END_IF
+
+// Go to the previous alarm
+IF fbPrevAlarmRTrig.Q THEN
+	// Is the first alarm on the alarm page selected?
+	IF nSelectedAlarm <= nPageLBound THEN
+		// Move displayed alarms backward by one
+		nFirstAlarmToDisplay := nFirstAlarmToDisplay - 1;
+	ELSE
+		// Select previous alarm
+		nSelectedAlarm := nSelectedAlarm - 1;
+	END_IF
+END_IF
+
+// Go to the next alarm
+IF fbNextAlarmRTrig.Q THEN
+	// Is the last alarm on the alarm page selected?
+	IF nSelectedAlarm >= nPageUBound THEN
+		IF nNumOfAlarms > nPageSize THEN
+			// Move displayed alarms forward by one
+			nFirstAlarmToDisplay := nFirstAlarmToDisplay + 1;
+		END_IF
+	ELSE
+		// Select next alarm
+		nSelectedAlarm := nSelectedAlarm + 1;
+	END_IF
+END_IF
+
+// Restrict alarm index to the upper limit
+nFirstAlarmToDisplay := MIN(nFirstAlarmToDisplay, nNumOfAlarms - 1);
+// Restrict alarm index to the lower limit
+nFirstAlarmToDisplay := MAX(nFirstAlarmToDisplay, 0);
+
+// Actual number of alarms that can be displayed
+nActualNumOfAlarms := nNumOfAlarms - nFirstAlarmToDisplay;
+// Number of alarms to be displayed
+nNumOfDisplayedAlarms := MIN(nPageSize, nActualNumOfAlarms);
+
+FOR i := 0 TO nNumOfDisplayedAlarms - 1 DO
+	
+	stCurrAlarm REF= pAlarmArray[nFirstAlarmToDisplay + i];
+	stCurrPageRow REF= aAlarmPage[nPageLBound + i];
+
+	// Convert alarm id to string
+	stCurrPageRow.sAlarmId := DINT_TO_STRING(stCurrAlarm.nAlarmId);	
+	// Format alarm text using the argument stack
+	fbVFormatStr(
+		sFormat := iAlarmTextList.GetAlarmText(stCurrAlarm.nAlarmId),
+		pArgStack := ADR(stCurrAlarm.aArgStack), 
+		nStackSize := SIZEOF(stCurrAlarm.aArgStack),
+		sOutput => stCurrPageRow.sAlarmText
+	);
+	// Convert Ack flag to string
+	IF stCurrAlarm.bCanByAcknowledged THEN
+		stCurrPageRow.sCanByAcknowledged := '!';
+	ELSE
+		stCurrPageRow.sCanByAcknowledged := '';
+	END_IF
+END_FOR
+
+// Clear the rest of the output array
+FOR i := nPageLBound + nNumOfDisplayedAlarms TO nPageUBound DO
+	ClearPageRow(i);
+END_FOR
+
+// Get context id of selected alarm
+IF nPageLBound <= nSelectedAlarm AND nSelectedAlarm <= nPageUBound THEN
+	nSelectedAlarmOffset := nSelectedAlarm - nPageLBound;
+	IF nSelectedAlarmOffset < nNumOfDisplayedAlarms THEN
+		nSelectedAlarmContextId := pAlarmArray[nFirstAlarmToDisplay + nSelectedAlarmOffset].nAlarmContextId;
+	END_IF
+END_IF
+]]></ST>
+    </Implementation>
+    <Property Name="Acknowledge" Id="{75c4a3ab-52ab-417e-bba3-7bcf23888b71}">
+      <Declaration><![CDATA[PROPERTY Acknowledge : BOOL]]></Declaration>
+      <Get Name="Get" Id="{cdd61503-cecb-4069-a01d-38ad659abf75}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Acknowledge := bAcknowledge;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="AddNewAlarm" Id="{f8a6eb6d-1c6b-43ec-975f-a1efc54aba06}">
+      <Declaration><![CDATA[METHOD PUBLIC AddNewAlarm : DINT
+VAR_INPUT
+	iAlarm : I_Alarm;
+END_VAR
+VAR
+	i : DINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[AddNewAlarm := ALARM_INVALID_CONTEXT_ID;
+
+IF NOT IsAlarmBufferFull THEN
+
+	// Make space for a new alarm by shifting array elements to right
+	FOR i := 1 TO nNumOfAlarms DO
+		pAlarmArray[nNumOfAlarms - i + 1] := pAlarmArray[nNumOfAlarms - i];
+	END_FOR
+	
+	pAlarmArray[0].nAlarmContextId := nNextContextId;
+	pAlarmArray[0].nAlarmId := iAlarm.AlarmId;
+	pAlarmArray[0].bCanByAcknowledged := FALSE;
+	
+	IF iAlarm.ArgStackMemoryPointer <> 0 AND iAlarm.ArgStackMemorySize > 0 THEN
+		F_SAFE_MEMCPY(
+			destAddr:= ADR(pAlarmArray[0].aArgStack),
+			nDestSize:= SIZEOF(pAlarmArray[0].aArgStack),
+			srcAddr:= iAlarm.ArgStackMemoryPointer,
+			nSrcSize:= iAlarm.ArgStackMemorySize);
+	END_IF
+
+	nNextContextId := nNextContextId + 1;
+	
+	// Prevent context id overflow
+	IF nNextContextId <= ALARM_INVALID_CONTEXT_ID THEN
+		nNextContextId := ALARM_INVALID_CONTEXT_ID + 1;
+	END_IF
+	
+	nNumOfAlarms := nNumOfAlarms + 1;
+
+	AddNewAlarm := pAlarmArray[0].nAlarmContextId;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ClearPageRow" Id="{647acc7b-1239-4405-ab08-7b83ecb4ed01}">
+      <Declaration><![CDATA[METHOD PRIVATE ClearPageRow
+VAR_INPUT
+	nRowIdx : DINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[aAlarmPage[nRowIdx].sAlarmId := '';
+aAlarmPage[nRowIdx].sAlarmText := '';
+aAlarmPage[nRowIdx].sCanByAcknowledged := '';
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="EnableAcknowledge" Id="{ebc32a0d-0d29-41c5-b7b8-828e7ad16839}">
+      <Declaration><![CDATA[METHOD PUBLIC EnableAcknowledge : BOOL
+VAR_INPUT
+	nAlarmContextId		: DINT;
+	bCanByAcknowledged	: BOOL;
+END_VAR
+VAR
+	nArrayIndex			: DINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[EnableAcknowledge := FALSE;
+nArrayIndex := GetArrayIndexByContextId(nAlarmContextId);
+
+IF nArrayIndex <> ALARM_INVALID_INDEX THEN
+	pAlarmArray[nArrayIndex].bCanByAcknowledged := bCanByAcknowledged;
+	EnableAcknowledge := TRUE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{92324380-56f7-4b3f-bbba-a0bdc6c6b3ee}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains			: BOOL;								// if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode				: BOOL;								// if TRUE, the instance afterwards gets moved into the copy code (online change)
+	pAlarmArray				: POINTER TO ST_AlarmElement;
+	nMaxNumOfAlarms			: DINT;
+	iAlarmTextList			: I_AlarmTextList;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.pAlarmArray := pAlarmArray;
+THIS^.nMaxNumOfAlarms := nMaxNumOfAlarms;
+THIS^.iAlarmTextList := iAlarmTextList;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetArrayIndexByContextId" Id="{19c463ed-1a43-4d37-84c3-8537c5983495}">
+      <Declaration><![CDATA[METHOD PRIVATE GetArrayIndexByContextId : DINT
+VAR_INPUT
+	nAlarmContextId : DINT;
+END_VAR
+VAR
+	i : DINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[GetArrayIndexByContextId := ALARM_INVALID_INDEX;
+
+IF nAlarmContextId <> ALARM_INVALID_CONTEXT_ID THEN
+	FOR i := 0 TO nNumOfAlarms - 1 DO
+		IF pAlarmArray[i].nAlarmContextId = nAlarmContextId THEN
+			GetArrayIndexByContextId := i;
+			RETURN;
+		END_IF
+	END_FOR
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="IsAlarmBufferFull" Id="{31dd585f-c250-44b9-8c57-0c4006c5d01a}">
+      <Declaration><![CDATA[PROPERTY PUBLIC IsAlarmBufferFull : BOOL]]></Declaration>
+      <Get Name="Get" Id="{e3eac177-c766-4e27-93d2-01c5a85e0980}">
+        <Declaration><![CDATA[]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsAlarmBufferFull := nNumOfAlarms >= nMaxNumOfAlarms;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="RemoveAlarm" Id="{ca7343ab-26e0-47dc-88a1-5027c7591abf}">
+      <Declaration><![CDATA[METHOD PUBLIC RemoveAlarm : BOOL
+VAR_INPUT
+	nAlarmContextId		: DINT;
+END_VAR
+VAR
+	nArrayIndex			: DINT;
+	i					: DINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[RemoveAlarm := FALSE;
+nArrayIndex := GetArrayIndexByContextId(nAlarmContextId);
+
+IF nArrayIndex > ALARM_INVALID_INDEX AND nArrayIndex < nNumOfAlarms THEN
+
+	// Remove element from array by shifting array elements to left
+	FOR i := nArrayIndex TO nNumOfAlarms - 2 DO
+		pAlarmArray[i] := pAlarmArray[i + 1];
+	END_FOR
+	nNumOfAlarms := nNumOfAlarms - 1;
+	
+	// Reinitialise element at the end of array freed by shifting
+	pAlarmArray[nNumOfAlarms].nAlarmContextId := ALARM_INVALID_CONTEXT_ID;
+	pAlarmArray[nNumOfAlarms].nAlarmId := 0;
+	pAlarmArray[nNumOfAlarms].bCanByAcknowledged := FALSE;
+	
+	MEMSET(
+		destAddr:= ADR(pAlarmArray[nNumOfAlarms].aArgStack),
+		fillByte:= 0,
+		SIZEOF(pAlarmArray[nNumOfAlarms].aArgStack)
+	);
+	
+	RemoveAlarm := TRUE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="SelectedAlarmContextId" Id="{63ab71b9-16f5-43ec-b93b-1bef5af70e66}">
+      <Declaration><![CDATA[PROPERTY PUBLIC SelectedAlarmContextId : DINT]]></Declaration>
+      <Get Name="Get" Id="{a6a7d8b5-7377-4059-911a-269e8fb71e58}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[SelectedAlarmContextId := nSelectedAlarmContextId;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>

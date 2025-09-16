@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="A_BYTE" Id="{679824f7-b8ad-45c8-b620-fa2d53625031}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION A_BYTE : ST_Arg
+VAR_INPUT
+	nNumber	: REFERENCE TO BYTE;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF __ISVALIDREF(nNumber) THEN
+	A_BYTE.eType := E_ArgType.ByteArg;
+	A_BYTE.pData := ADR(nNumber);
+	A_BYTE.nSize := SIZEOF(BYTE);
+END_IF
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

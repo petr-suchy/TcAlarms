@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="ST_AlarmPageRow" Id="{93aaa12d-8e5b-44c5-a6f8-1b51c35d4b50}">
+    <Declaration><![CDATA[TYPE ST_AlarmPageRow :
+STRUCT
+	sAlarmId			: STRING(10);
+	sAlarmText			: STRING(ALARM_TEXT_SIZE);
+	sCanByAcknowledged	: STRING(1);
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <Itf Name="I_AlarmTextList" Id="{b866adc6-8f56-448e-b389-cdb43d8a333a}">
+    <Declaration><![CDATA[INTERFACE I_AlarmTextList
+]]></Declaration>
+    <Method Name="GetAlarmText" Id="{9a0a98d0-7440-4c20-8b0f-4dff42afa739}">
+      <Declaration><![CDATA[METHOD GetAlarmText : STRING(ALARM_TEXT_SIZE)
+VAR_INPUT
+	nAlarmId : DINT;
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

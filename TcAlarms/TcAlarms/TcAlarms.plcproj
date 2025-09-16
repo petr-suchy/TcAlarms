@@ -16,18 +16,136 @@
     <Implicit_KindOfTask>{476bf74e-29bb-4d8e-91fc-2b878a3e2286}</Implicit_KindOfTask>
     <Implicit_Jitter_Distribution>{f355ac4a-7fa4-409d-bc24-fc4667edc22f}</Implicit_Jitter_Distribution>
     <LibraryReferences>{aed22a4b-4ae1-4408-b3c5-81458958df6b}</LibraryReferences>
+    <Company>https://github.com/petr-suchy</Company>
+    <Released>false</Released>
+    <ProjectVersion>0.0.1.0</ProjectVersion>
+    <DefaultNamespace>TcAlarms</DefaultNamespace>
+    <Title>TwinCAT Alarm Handling Library</Title>
+    <Author>Petr Suchý</Author>
+    <Description>TwinCAT library for alarm handling in PLC programs. </Description>
+    <CombineIds>false</CombineIds>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DUTs\E_ArgType.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\ST_AlarmElement.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\ST_AlarmPageRow.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\ST_Arg.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FBs\FB_Alarm.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FBs\FB_AlarmArg.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FBs\FB_AlarmBase.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FBs\FB_AlarmContext.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FBs\FB_ArgStack.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FBs\FB_RdArgStack.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FBs\FB_SRAlarm.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FBs\FB_SRAlarmArg.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FBs\FB_VFormatStr.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FBs\FB_WrArgStack.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FUNs\A_BOOL.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FUNs\A_BYTE.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FUNs\A_DATE.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FUNs\A_DINT.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FUNs\A_DWORD.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FUNs\A_INT.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FUNs\A_LREAL.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FUNs\A_REAL.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FUNs\A_SINT.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FUNs\A_STRING.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FUNs\A_TIME.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FUNs\A_UDINT.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FUNs\A_UINT.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FUNs\A_USINT.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FUNs\A_WORD.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FUNs\F_SAFE_MEMCPY.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GVLs\GVL.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="ITFs\I_Alarm.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ITFs\I_AlarmContext.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ITFs\I_AlarmTextList.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Version\Global_Version.TcGVL">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DUTs" />
+    <Folder Include="FBs" />
+    <Folder Include="FUNs" />
     <Folder Include="GVLs" />
+    <Folder Include="ITFs" />
+    <Folder Include="Version" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />
   </ItemGroup>

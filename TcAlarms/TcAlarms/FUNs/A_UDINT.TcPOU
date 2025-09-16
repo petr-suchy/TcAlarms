@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="A_UDINT" Id="{a08428ad-331d-4af6-b92a-5f6242ccc9e1}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION A_UDINT : ST_Arg
+VAR_INPUT
+	nNumber	: REFERENCE TO UDINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF __ISVALIDREF(nNumber) THEN
+	A_UDINT.eType := E_ArgType.UDIntArg;
+	A_UDINT.pData := ADR(nNumber);
+	A_UDINT.nSize := SIZEOF(UDINT);
+END_IF
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,200 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_ArgStack" Id="{5aca428e-fddd-4368-a23a-daa0a6193ea2}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_ArgStack
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	pStackMemory			: POINTER TO BYTE;
+	nStackMemorySize		: DINT;
+	nCurrOfsetInStack		: DINT;
+END_VAR
+VAR CONSTANT
+	ARG_HEADER_SIZE			: DINT := 2;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="ArgDataAvailableSize" Id="{de7a8127-1eb8-47f6-ba84-c0222375861f}">
+      <Declaration><![CDATA[PROPERTY PROTECTED ArgDataAvailableSize : DINT]]></Declaration>
+      <Get Name="Get" Id="{62763f37-3a46-49f7-bd23-261f0b6844d2}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ArgDataAvailableSize := MAX(0, RemainingMemorySize - ARG_HEADER_SIZE);
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="ArgDataOffset" Id="{5b091e0b-9606-4c96-ad76-a9ddea1d6a54}">
+      <Declaration><![CDATA[PROPERTY PROTECTED ArgDataOffset : DINT]]></Declaration>
+      <Get Name="Get" Id="{ed618d43-6339-4f85-a02b-661e5cae8e5c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ArgDataOffset := nCurrOfsetInStack + ARG_HEADER_SIZE;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="ArgDataPointer" Id="{67e77f93-0c7c-464e-a41e-e717e057f691}">
+      <Declaration><![CDATA[PROPERTY PUBLIC ArgDataPointer : POINTER TO BYTE]]></Declaration>
+      <Get Name="Get" Id="{306a822d-c915-4f35-9e83-9df596cd217d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ArgDataPointer := ADR(pStackMemory[ArgDataOffset]);
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="ArgSize" Id="{2f9ac1b1-db36-4120-b5d3-f4ba1c0bc294}">
+      <Declaration><![CDATA[PROPERTY PROTECTED ArgSize : BYTE]]></Declaration>
+      <Get Name="Get" Id="{465a96fe-684b-40e5-9788-5d17b2732bc4}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ArgSize := pStackMemory[nCurrOfsetInStack + 1];
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{83a45f2e-62dd-49c4-89cd-72526e7a852d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[pStackMemory[nCurrOfsetInStack + 1] := ArgSize;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="ArgType" Id="{8dff9f69-cd50-4b55-b47c-4d2c0dbd81f3}">
+      <Declaration><![CDATA[PROPERTY PROTECTED ArgType : BYTE]]></Declaration>
+      <Get Name="Get" Id="{b6bbd970-8717-45a9-ac72-4b5bb9ae30a3}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ArgType := pStackMemory[nCurrOfsetInStack];]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{acd10166-0626-4379-b470-da6d3d22000a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[pStackMemory[nCurrOfsetInStack] := ArgType;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="AtEndOfMemory" Id="{94135612-bd36-4768-86c4-dc4015449b57}">
+      <Declaration><![CDATA[PROPERTY PROTECTED AtEndOfMemory : BOOL]]></Declaration>
+      <Get Name="Get" Id="{8a3cea2c-ae6b-4de9-9a19-eba2af230cfd}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[AtEndOfMemory := RemainingMemorySize < ARG_HEADER_SIZE;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Clear" Id="{61ae53d5-0357-48cb-807c-17cbeada3a8c}">
+      <Declaration><![CDATA[METHOD PUBLIC Clear
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[nCurrOfsetInStack := 0;
+
+IF nStackMemorySize > 0 THEN
+	// Zero stack memory
+	MEMSET(
+		destAddr:= pStackMemory,
+		fillByte:= 0,
+		n:= DINT_TO_UDINT(nStackMemorySize));
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{b1481970-1f76-489f-910d-b0f425ca9ae4}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains		: BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode			: BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	pStackMemory		: POINTER TO BYTE;
+	nStackMemorySize	: DINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[SetMemory(pStackMemory, nStackMemorySize);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="MemoryPointer" Id="{580d5b7a-81bd-464b-a9c8-40858491b0de}">
+      <Declaration><![CDATA[PROPERTY PUBLIC MemoryPointer : POINTER TO BYTE]]></Declaration>
+      <Get Name="Get" Id="{3b929468-ca7f-4b3c-83fe-f333e6202ca2}">
+        <Declaration><![CDATA[]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MemoryPointer := pStackMemory;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MemorySize" Id="{ad6e4f2c-14b1-439f-87bf-3767e39cb9d5}">
+      <Declaration><![CDATA[PROPERTY PUBLIC MemorySize : DINT]]></Declaration>
+      <Get Name="Get" Id="{7c136861-7956-4188-adf4-1403b21a7a06}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MemorySize := nStackMemorySize;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="RemainingMemorySize" Id="{ee0f045c-05eb-433a-a6ee-b87169491f95}">
+      <Declaration><![CDATA[PROPERTY PROTECTED RemainingMemorySize : DINT]]></Declaration>
+      <Get Name="Get" Id="{b7097647-0e9f-456a-a402-875ec97504a9}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[RemainingMemorySize := nStackMemorySize - nCurrOfsetInStack;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="SetMemory" Id="{eb4dabce-185b-4416-838b-fe62834036b5}">
+      <Declaration><![CDATA[METHOD PUBLIC SetMemory
+VAR_INPUT
+	pStackMemory		: POINTER TO BYTE;
+	nStackMemorySize	: DINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.pStackMemory := pStackMemory;
+
+IF THIS^.pStackMemory <> 0 THEN
+	THIS^.nStackMemorySize := nStackMemorySize;
+ELSE
+	THIS^.nStackMemorySize := 0;
+END_IF
+
+THIS^.nCurrOfsetInStack := 0;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="UsedMemorySize" Id="{ef9444e9-bd18-4f67-a51a-a3d21b0e8701}">
+      <Declaration><![CDATA[PROPERTY PUBLIC UsedMemorySize : DINT]]></Declaration>
+      <Get Name="Get" Id="{a01f0c64-3e54-476f-ae01-3645e39de6cd}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[UsedMemorySize := nCurrOfsetInStack;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>

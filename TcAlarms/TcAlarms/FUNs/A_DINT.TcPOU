@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="A_DINT" Id="{cf50f6bc-06ed-4f70-939d-1eaa5d9117be}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION A_DINT : ST_Arg
+VAR_INPUT
+	nNumber	: REFERENCE TO DINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF __ISVALIDREF(nNumber) THEN
+	A_DINT.eType := E_ArgType.DIntArg;
+	A_DINT.pData := ADR(nNumber);
+	A_DINT.nSize := SIZEOF(DINT);
+END_IF
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

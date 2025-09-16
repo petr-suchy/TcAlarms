@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <GVL Name="GVL" Id="{2c67669b-06d4-439a-b056-792cfc801adc}">
+    <Declaration><![CDATA[VAR_GLOBAL CONSTANT
+	ALARM_INVALID_CONTEXT_ID	: DINT := 0;
+	ALARM_INVALID_INDEX			: DINT := -1;
+	ALARM_ARG_STACK_SIZE		: DINT := 255;
+	ALARM_TEXT_SIZE				: INT := 255;
+END_VAR
+]]></Declaration>
+  </GVL>
+</TcPlcObject>

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <Itf Name="I_Alarm" Id="{de3a4b9d-4f16-4f54-a6f5-7e2689dd293f}">
+    <Declaration><![CDATA[INTERFACE I_Alarm
+]]></Declaration>
+    <Property Name="AlarmId" Id="{c5a5d68f-cd0c-414a-9996-a847e04ecc98}">
+      <Declaration><![CDATA[PROPERTY AlarmId : DINT]]></Declaration>
+      <Get Name="Get" Id="{de953d70-013d-44a7-82e0-2435ad613e94}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="ArgStackMemoryPointer" Id="{4852cf3b-552a-4a1f-9267-4f27b52cc012}">
+      <Declaration><![CDATA[PROPERTY ArgStackMemoryPointer : POINTER TO BYTE]]></Declaration>
+      <Get Name="Get" Id="{2a1d79db-762c-4aa7-8cbe-3e9bd2f7090c}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="ArgStackMemorySize" Id="{19302f09-37fe-4fe1-ac4e-bd14a66e3108}">
+      <Declaration><![CDATA[PROPERTY ArgStackMemorySize : DINT]]></Declaration>
+      <Get Name="Get" Id="{bfc9c7aa-4e4e-4b09-a1ff-dab0ad1d6954}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>

@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_AlarmBase" Id="{04313dcc-4e0a-48ee-b19d-8b92720ca9ef}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK ABSTRACT FB_AlarmBase IMPLEMENTS I_Alarm
+VAR_OUTPUT
+	bActive				: BOOL;
+END_VAR
+VAR
+	iAlarmContext		: I_AlarmContext;
+	nAlarmContextId		: DINT := ALARM_INVALID_CONTEXT_ID;
+	nAlarmId			: DINT;
+	fbActiveRTrig		: R_TRIG;
+	fbActiveFTrig		: F_TRIG;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbActiveRTrig(CLK := bActive);
+fbActiveFTrig(CLK := bActive);
+
+IF fbActiveRTrig.Q THEN
+	CopyArgsToStack();
+END_IF
+
+IF bActive AND nAlarmContextId = ALARM_INVALID_CONTEXT_ID AND NOT iAlarmContext.IsAlarmBufferFull THEN
+	// Add this alarm to alarm context
+	nAlarmContextId := iAlarmContext.AddNewAlarm(THIS^);
+END_IF
+
+IF fbActiveFTrig.Q THEN
+	IF nAlarmContextId <> ALARM_INVALID_CONTEXT_ID THEN
+		// Prepare argument stack for new arguments
+		ClearArgStack();
+		// Remove this alarm from alarm context
+		iAlarmContext.RemoveAlarm(nAlarmContextId);
+		nAlarmContextId := ALARM_INVALID_CONTEXT_ID;
+	END_IF
+END_IF
+]]></ST>
+    </Implementation>
+    <Property Name="AlarmId" Id="{2d1899b9-4017-4f95-8f6c-0034962310d9}">
+      <Declaration><![CDATA[PROPERTY AlarmId : DINT]]></Declaration>
+      <Get Name="Get" Id="{4476556b-1d1a-477d-b3f1-647cdb1e10e5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[AlarmId := nAlarmId;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="ArgStackMemoryPointer" Id="{0b0678ac-674b-42ea-a6dc-8513842eac7a}">
+      <Declaration><![CDATA[PROPERTY ABSTRACT ArgStackMemoryPointer : POINTER TO BYTE]]></Declaration>
+      <Get Name="Get" Id="{12a06311-a00e-467e-ae51-9be1c5db8ca7}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="ArgStackMemorySize" Id="{7ca7e053-1df9-40d3-9e2c-a93e7fe96283}">
+      <Declaration><![CDATA[PROPERTY ABSTRACT ArgStackMemorySize : DINT]]></Declaration>
+      <Get Name="Get" Id="{736a1dae-b3ea-4e72-9beb-06cfc93935c1}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="ClearArgStack" Id="{15032434-4939-47dc-b1ee-cc562c777d55}">
+      <Declaration><![CDATA[METHOD PROTECTED ABSTRACT ClearArgStack
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CopyArgsToStack" Id="{e4e54049-9092-4598-8c52-246ef39f02eb}">
+      <Declaration><![CDATA[METHOD PROTECTED ABSTRACT CopyArgsToStack
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{5872302a-1c07-4ba2-b228-b76436212b67}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains		: BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode			: BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	iAlarmContext		: I_AlarmContext;
+	nAlarmId			: DINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.iAlarmContext := iAlarmContext;
+THIS^.nAlarmId := nAlarmId;
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

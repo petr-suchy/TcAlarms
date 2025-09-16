@@ -1,0 +1,306 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_RdArgStack" Id="{66665531-8b0a-484f-952a-43cea41ddbcd}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_RdArgStack EXTENDS FB_ArgStack
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="AtEnd" Id="{1da772b9-4493-4c5f-b2e3-492311788ff2}">
+      <Declaration><![CDATA[PROPERTY PUBLIC AtEnd : BOOL]]></Declaration>
+      <Get Name="Get" Id="{c4ca1519-f373-4edc-9095-bead2f8c2e12}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[AtEnd := AtEndOfMemory;
+
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="GetDateArg" Id="{65b8129e-1e62-4a25-a1cf-f9b74c38d2bb}">
+      <Declaration><![CDATA[METHOD PUBLIC GetDateArg : DATE
+VAR
+	pDate : POINTER TO DATE;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF ArgDataAvailableSize < ArgSize THEN
+	RETURN;
+END_IF
+
+IF IsDate AND ArgSize = SIZEOF(pDate^) THEN
+	pDate := ArgDataPointer;
+	GetDateArg := pDate^;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetFloatArg" Id="{30c05895-5e10-4420-91e8-6685f63d430f}">
+      <Declaration><![CDATA[METHOD GetFloatArg : LREAL
+VAR
+	pReal		: POINTER TO REAL;
+	pLReal		: POINTER TO LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+IF ArgDataAvailableSize < ArgSize THEN
+	RETURN;
+END_IF
+
+CASE ArgType OF
+	E_ArgType.RealArg:
+		IF ArgSize = SIZEOF(pReal^) THEN
+			pReal := ArgDataPointer;
+			GetFloatArg := pReal^;
+		END_IF
+
+	E_ArgType.LRealArg:
+		IF ArgSize = SIZEOF(pLReal^) THEN
+			pLReal := ArgDataPointer;
+			GetFloatArg := pLReal^;
+		END_IF
+
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetIntArg" Id="{d84b27ab-1f54-4a3a-8622-c51dc2298f5b}">
+      <Declaration><![CDATA[METHOD PUBLIC GetIntArg : DINT
+VAR
+	pSInt		: POINTER TO SINT;
+	pInt		: POINTER TO INT;
+	pDInt		: POINTER TO DINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+IF ArgDataAvailableSize < ArgSize THEN
+	RETURN;
+END_IF
+
+CASE ArgType OF
+	E_ArgType.SIntArg:
+		IF ArgSize = SIZEOF(pSInt^) THEN
+			pSInt := ArgDataPointer;
+			GetIntArg := pSInt^;
+		END_IF
+
+	E_ArgType.IntArg:
+		IF ArgSize = SIZEOF(pInt^) THEN
+			pInt := ArgDataPointer;
+			GetIntArg := pInt^;
+		END_IF
+		
+	E_ArgType.DIntArg:
+		IF ArgSize = SIZEOF(pDInt^) THEN
+			pDInt := ArgDataPointer;
+			GetIntArg := pDInt^;
+		END_IF
+
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetStringArg" Id="{73a2ce3d-bdcb-4e60-aae3-7a6fad440f64}">
+      <Declaration><![CDATA[METHOD PUBLIC GetStringArg : STRING
+VAR
+	nStrLen		: INT;
+	nMaxOutLen	: INT;
+	i			: INT;
+	j			: DINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF ArgDataAvailableSize < ArgSize THEN
+	RETURN;
+END_IF
+
+nStrLen := ArgSize;
+nMaxOutLen := UDINT_TO_INT(SIZEOF(GetStringArg));
+
+i := 0;
+j := ArgDataOffset;
+
+WHILE i < nStrLen AND i < nMaxOutLen DO
+	GetStringArg[i] := pStackMemory[j];
+	i := i + 1;
+	j := j + 1;
+END_WHILE
+
+GetStringArg[i] := 0;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetTimeArg" Id="{78dc2e93-1bad-4036-8962-08f05c7186bd}">
+      <Declaration><![CDATA[METHOD PUBLIC GetTimeArg : TIME
+VAR
+	pTime : POINTER TO TIME;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF ArgDataAvailableSize < ArgSize THEN
+	RETURN;
+END_IF
+
+IF IsTime AND ArgSize = SIZEOF(pTime^) THEN
+	pTime := ArgDataPointer;
+	GetTimeArg := pTime^;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetUIntArg" Id="{aa22894f-c04a-4671-b8b1-3189ae6df47e}">
+      <Declaration><![CDATA[METHOD PUBLIC GetUIntArg : UDINT
+VAR
+	pByte		: POINTER TO BYTE;
+	pWord		: POINTER TO WORD;
+	pDWord		: POINTER TO DWORD;
+	pUSInt		: POINTER TO USINT;
+	pUInt		: POINTER TO UINT;
+	pUDInt		: POINTER TO UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+IF ArgDataAvailableSize < ArgSize THEN
+	RETURN;
+END_IF
+
+CASE ArgType OF
+	E_ArgType.ByteArg:
+		IF ArgSize = SIZEOF(pByte^) THEN
+			pByte := ArgDataPointer;
+			GetUIntArg := pByte^;
+		END_IF
+		
+	E_ArgType.WordArg:
+		IF ArgSize = SIZEOF(pWord^) THEN
+			pWord := ArgDataPointer;
+			GetUIntArg := pWord^;
+		END_IF
+		
+	E_ArgType.DWordArg:
+		IF ArgSize = SIZEOF(pDWord^) THEN
+			pDWord := ArgDataPointer;
+			GetUIntArg := pDWord^;
+		END_IF
+		
+	E_ArgType.USIntArg:
+		IF ArgSize = SIZEOF(pUSInt^) THEN
+			pUSInt := ArgDataPointer;
+			GetUIntArg := pUSInt^;
+		END_IF
+
+	E_ArgType.UIntArg:
+		IF ArgSize = SIZEOF(pUInt^) THEN
+			pUInt := ArgDataPointer;
+			GetUIntArg := pUInt^;
+		END_IF
+
+	E_ArgType.UDIntArg:
+		IF ArgSize = SIZEOF(pUDInt^) THEN
+			pUDInt := ArgDataPointer;
+			GetUIntArg := pUDInt^;
+		END_IF
+		
+END_CASE
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="IsDate" Id="{72a7d797-d613-4840-8da1-35d45ea6a292}">
+      <Declaration><![CDATA[PROPERTY PUBLIC IsDate : BOOL]]></Declaration>
+      <Get Name="Get" Id="{e4118f32-fc28-46e1-a201-902912c3a8a3}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsDate := ArgType = E_ArgType.DateArg;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="IsFloatArg" Id="{71265a3e-fbe4-40d9-b8b4-bf0da169d40b}">
+      <Declaration><![CDATA[PROPERTY PUBLIC IsFloatArg : BOOL]]></Declaration>
+      <Get Name="Get" Id="{67c9b55f-d7f8-401c-ac83-fb0f86fab392}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsFloatArg := ArgType = E_ArgType.RealArg OR
+	ArgType = E_ArgType.LRealArg;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="IsIntArg" Id="{f36b8804-fff4-47c1-bdf2-29cda6eed18f}">
+      <Declaration><![CDATA[PROPERTY PUBLIC IsIntArg : BOOL]]></Declaration>
+      <Get Name="Get" Id="{60b2240a-d739-4129-8ee5-0a06f5032bdc}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsIntArg := ArgType = E_ArgType.SIntArg OR
+	ArgType = E_ArgType.IntArg OR
+	ArgType = E_ArgType.DIntArg;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="IsString" Id="{8e259d5a-11da-46ba-9334-082c4a8b5a5e}">
+      <Declaration><![CDATA[PROPERTY PUBLIC IsString : BOOL]]></Declaration>
+      <Get Name="Get" Id="{3f0e2232-22ab-4f6b-b669-cb2401aaa458}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsString := ArgType = E_ArgType.StringArg;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="IsTime" Id="{00888d78-b39f-47f6-aa6b-87ae0660ef98}">
+      <Declaration><![CDATA[PROPERTY PUBLIC IsTime : BOOL]]></Declaration>
+      <Get Name="Get" Id="{f95ae263-3289-4275-b656-8e908416fa19}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsTime := ArgType = E_ArgType.TimeArg;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="IsUIntArg" Id="{512f0a9b-d6d1-40f1-af11-611bea7fa50e}">
+      <Declaration><![CDATA[PROPERTY PUBLIC IsUIntArg : BOOL]]></Declaration>
+      <Get Name="Get" Id="{3e3b94e1-3644-4a3e-aa2b-1147698a6f5b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsUIntArg := ArgType = E_ArgType.USIntArg OR
+	ArgType = E_ArgType.UIntArg OR
+	ArgType = E_ArgType.UDIntArg;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="NextArg" Id="{61d72cb6-8c9d-4574-b73b-5c2511d7ab22}">
+      <Declaration><![CDATA[METHOD PUBLIC NextArg
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[nCurrOfsetInStack := MIN(nCurrOfsetInStack + ARG_HEADER_SIZE + ArgSize, nStackMemorySize);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Reset" Id="{49fbadcd-c1ac-4c2e-b56c-826115e7a9ca}">
+      <Declaration><![CDATA[METHOD PUBLIC Reset : DINT
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[nCurrOfsetInStack := 0;
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

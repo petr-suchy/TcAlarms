@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="E_ArgType" Id="{2e04f02c-e866-4926-b832-b3a5e90b46c3}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_ArgType :
+(
+	VoidArg := 0,
+	BoolArg,
+	ByteArg,
+	WordArg,
+	DWordArg,
+	SIntArg,
+	USIntArg,
+	IntArg,
+	UIntArg,
+	DIntArg,
+	UDIntArg,
+	RealArg,
+	LRealArg,
+	StringArg,
+	TimeArg,
+	DateArg
+) BYTE := VoidArg;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

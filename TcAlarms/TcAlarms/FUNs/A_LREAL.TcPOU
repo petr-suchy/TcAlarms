@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="A_LREAL" Id="{9f4b9aff-5689-4edf-8766-f5bc751a0fa8}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION A_LREAL : ST_Arg
+VAR_INPUT
+	fNumber	: REFERENCE TO LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF __ISVALIDREF(fNumber) THEN
+	A_LREAL.eType := E_ArgType.LRealArg;
+	A_LREAL.pData := ADR(fNumber);
+	A_LREAL.nSize := SIZEOF(LREAL);
+END_IF
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

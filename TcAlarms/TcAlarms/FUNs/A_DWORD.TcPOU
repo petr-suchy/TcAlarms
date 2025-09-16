@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="A_DWORD" Id="{83cc648e-b1c2-4629-a03d-6acdef34b847}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION A_DWORD : ST_Arg
+VAR_INPUT
+	nNumber	: REFERENCE TO DWORD;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF __ISVALIDREF(nNumber) THEN
+	A_DWORD.eType := E_ArgType.DWordArg;
+	A_DWORD.pData := ADR(nNumber);
+	A_DWORD.nSize := SIZEOF(DWORD);
+END_IF
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

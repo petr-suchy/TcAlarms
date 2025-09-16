@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="A_DATE" Id="{fbb3fe98-7bfe-4c88-9997-57e3b7cfe99c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION A_DATE : ST_Arg
+VAR_INPUT
+	obj	: REFERENCE TO DATE;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF __ISVALIDREF(obj) THEN
+	A_DATE.eType := E_ArgType.DateArg;
+	A_DATE.pData := ADR(obj);
+	A_DATE.nSize := SIZEOF(DATE);
+END_IF
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

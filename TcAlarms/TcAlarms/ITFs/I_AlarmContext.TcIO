@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <Itf Name="I_AlarmContext" Id="{771b6988-0709-4c75-8e82-dfd8ec524245}">
+    <Declaration><![CDATA[INTERFACE I_AlarmContext
+]]></Declaration>
+    <Property Name="Acknowledge" Id="{07d16865-68b4-46b2-a8d9-76825b9370a5}">
+      <Declaration><![CDATA[PROPERTY Acknowledge : BOOL]]></Declaration>
+      <Get Name="Get" Id="{d228de9d-2310-47c2-8e08-d20f5531e0db}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="AddNewAlarm" Id="{10388e2c-3ad8-4a45-a43e-5b3ecc097722}">
+      <Declaration><![CDATA[METHOD AddNewAlarm : DINT
+VAR_INPUT
+	iAlarm : I_Alarm;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="EnableAcknowledge" Id="{e79202b3-4d68-4058-a378-96b1778c659e}">
+      <Declaration><![CDATA[METHOD EnableAcknowledge : BOOL
+VAR_INPUT
+	nAlarmContextId		: DINT;
+	bCanByAcknowledged	: BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="IsAlarmBufferFull" Id="{c4af422c-0c7b-4be1-8948-4f10649d7b82}">
+      <Declaration><![CDATA[PROPERTY IsAlarmBufferFull : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{e278ec41-7153-41c9-9a6a-328637f73f52}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="RemoveAlarm" Id="{70ea4550-008d-4922-b512-a097b6f46f95}">
+      <Declaration><![CDATA[METHOD RemoveAlarm : BOOL
+VAR_INPUT
+	nAlarmContextId : DINT;
+END_VAR]]></Declaration>
+    </Method>
+    <Property Name="SelectedAlarmContextId" Id="{fb8f4d44-0eee-4911-8615-e4224116402a}">
+      <Declaration><![CDATA[PROPERTY SelectedAlarmContextId : DINT]]></Declaration>
+      <Get Name="Get" Id="{b09fa67e-a690-42ac-b103-1d2b25eab725}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>
