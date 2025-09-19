@@ -4,6 +4,7 @@
     <Declaration><![CDATA[TYPE ST_AlarmElement :
 STRUCT
 	nAlarmContextId		: DINT := ALARM_INVALID_CONTEXT_ID;
+	eAlarmSeverity		: E_AlarmSeverity;
 	nAlarmId			: DINT;
 	aArgStack			: ARRAY[1..ALARM_ARG_STACK_SIZE] OF BYTE;
 	bCanByAcknowledged	: BOOL;

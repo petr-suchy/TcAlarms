@@ -9,6 +9,12 @@
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
+    <Property Name="AlarmSeverity" Id="{1a5efc3b-81e6-4954-a2d4-8e9125328ed8}">
+      <Declaration><![CDATA[PROPERTY AlarmSeverity : E_AlarmSeverity]]></Declaration>
+      <Get Name="Get" Id="{525b29b9-ba07-4ca1-8a6e-1848e1c371ec}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
     <Property Name="ArgStackMemoryPointer" Id="{4852cf3b-552a-4a1f-9267-4f27b52cc012}">
       <Declaration><![CDATA[PROPERTY ArgStackMemoryPointer : POINTER TO BYTE]]></Declaration>
       <Get Name="Get" Id="{2a1d79db-762c-4aa7-8cbe-3e9bd2f7090c}">

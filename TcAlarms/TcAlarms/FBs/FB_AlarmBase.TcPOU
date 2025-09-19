@@ -8,6 +8,7 @@ END_VAR
 VAR
 	iAlarmContext		: I_AlarmContext;
 	nAlarmContextId		: DINT := ALARM_INVALID_CONTEXT_ID;
+	eAlarmSeverity		: E_AlarmSeverity;
 	nAlarmId			: DINT;
 	fbActiveRTrig		: R_TRIG;
 	fbActiveFTrig		: F_TRIG;
@@ -45,6 +46,18 @@ END_VAR
 ]]></Declaration>
         <Implementation>
           <ST><![CDATA[AlarmId := nAlarmId;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="AlarmSeverity" Id="{33d1dd3e-b0a4-4726-bcd9-45b152ddd32a}">
+      <Declaration><![CDATA[PROPERTY AlarmSeverity : E_AlarmSeverity]]></Declaration>
+      <Get Name="Get" Id="{873560b5-31a1-449d-8d7d-e29a11ca8747}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[AlarmSeverity := eAlarmSeverity;
 ]]></ST>
         </Implementation>
       </Get>
@@ -95,11 +108,13 @@ VAR_INPUT
 	bInitRetains		: BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
 	bInCopyCode			: BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
 	iAlarmContext		: I_AlarmContext;
+	eAlarmSeverity		: E_AlarmSeverity;
 	nAlarmId			: DINT;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.iAlarmContext := iAlarmContext;
+THIS^.eAlarmSeverity := eAlarmSeverity;
 THIS^.nAlarmId := nAlarmId;
 ]]></ST>
       </Implementation>

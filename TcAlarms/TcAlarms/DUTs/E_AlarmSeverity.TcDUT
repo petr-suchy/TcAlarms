@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="E_AlarmSeverity" Id="{b2ecf0aa-0b63-44c2-baf1-61f189e67d83}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_AlarmSeverity :
+(
+	NoneAlarm := 0,
+	InfoAlarm,
+	WarningAlarm,
+	ErrorAlarm
+) BYTE := NoneAlarm;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -3,6 +3,7 @@
   <DUT Name="ST_AlarmPageRow" Id="{93aaa12d-8e5b-44c5-a6f8-1b51c35d4b50}">
     <Declaration><![CDATA[TYPE ST_AlarmPageRow :
 STRUCT
+	eAlarmSeverity		: E_AlarmSeverity;
 	sAlarmId			: STRING(10);
 	sAlarmText			: STRING(ALARM_TEXT_SIZE);
 	sCanByAcknowledged	: STRING(1);
