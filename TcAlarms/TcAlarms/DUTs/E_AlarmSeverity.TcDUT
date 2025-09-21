@@ -3,6 +3,7 @@
   <DUT Name="E_AlarmSeverity" Id="{b2ecf0aa-0b63-44c2-baf1-61f189e67d83}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 {attribute 'strict'}
+{attribute 'to_string'}
 TYPE E_AlarmSeverity :
 (
 	NoneAlarm := 0,

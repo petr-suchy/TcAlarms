@@ -4,33 +4,38 @@
     <XmlArchive>
       <Data>
         <o xml:space="preserve" t="ImagePoolObject">
-          <v n="UniqueIdGenerator">"20"</v>
+          <v n="UniqueIdGenerator">"26"</v>
           <l n="BitmapPool" t="ArrayList" cet="ImagePoolItem">
             <o>
               <v n="BitmapID">"InfoAlarm"</v>
               <v n="FileID">"5ce3da45-db07-42e7-a21c-a00fff4ed8f6|IMAGEs\InfoAlarm.png"</v>
-              <v n="ItemID">1</v>
+              <v n="ItemID">21</v>
             </o>
             <o>
               <v n="BitmapID">"WarningAlarm"</v>
               <v n="FileID">"5ce3da45-db07-42e7-a21c-a00fff4ed8f6|IMAGEs\WarningAlarm.png"</v>
-              <v n="ItemID">2</v>
+              <v n="ItemID">22</v>
             </o>
             <o>
               <v n="BitmapID">"ErrorAlarm"</v>
               <v n="FileID">"5ce3da45-db07-42e7-a21c-a00fff4ed8f6|IMAGEs\ErrorAlarm.png"</v>
-              <v n="ItemID">6</v>
+              <v n="ItemID">23</v>
+            </o>
+            <o>
+              <v n="BitmapID">"NoneAlarm"</v>
+              <v n="FileID">"5ce3da45-db07-42e7-a21c-a00fff4ed8f6|IMAGEs\NoneAlarm.png"</v>
+              <v n="ItemID">24</v>
             </o>
             <o>
               <v n="BitmapID">""</v>
               <v n="FileID">""</v>
-              <v n="ItemID">9</v>
+              <v n="ItemID">25</v>
             </o>
           </l>
           <v n="GuidInit">{33c36761-51f6-48c5-b328-fd66382f78ca}</v>
           <v n="GuidReInit">{db10a7b0-abe4-49ca-a74d-816bb038d45e}</v>
           <v n="GuidExitX">{f8166f15-c4fe-4196-a412-5b65f6c6a97c}</v>
-          <v n="ValidIds">false</v>
+          <v n="ValidIds">true</v>
         </o>
       </Data>
       <TypeList>

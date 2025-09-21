@@ -182,6 +182,9 @@
     <Content Include="IMAGEs\InfoAlarm.png">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="IMAGEs\NoneAlarm.png">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="IMAGEs\WarningAlarm.png">
       <SubType>Content</SubType>
     </Content>

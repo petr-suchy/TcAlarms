@@ -133,8 +133,8 @@ FOR i := 0 TO nNumOfDisplayedAlarms - 1 DO
 	stCurrAlarm REF= pAlarmArray[nFirstAlarmToDisplay + i];
 	stCurrPageRow REF= aAlarmPage[nPageLBound + i];
 
-	// Copy alarm severity
-	stCurrPageRow.eAlarmSeverity := stCurrAlarm.eAlarmSeverity;
+	// Convert alarm severity to string
+	stCurrPageRow.sAlarmSeverity := TO_STRING(stCurrAlarm.eAlarmSeverity);
 	// Convert alarm id to string
 	stCurrPageRow.sAlarmId := DINT_TO_STRING(stCurrAlarm.nAlarmId);	
 	// Format alarm text using the argument stack
@@ -231,7 +231,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[aAlarmPage[nRowIdx].eAlarmSeverity := E_AlarmSeverity.NoneAlarm;
+        <ST><![CDATA[aAlarmPage[nRowIdx].sAlarmSeverity := TO_STRING(E_AlarmSeverity.NoneAlarm);
 aAlarmPage[nRowIdx].sAlarmId := '';
 aAlarmPage[nRowIdx].sAlarmText := '';
 aAlarmPage[nRowIdx].sCanByAcknowledged := '';
