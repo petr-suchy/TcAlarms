@@ -16,7 +16,7 @@ VAR_OUTPUT
 END_VAR
 VAR_IN_OUT
 	aAlarmPage					: ARRAY[*] OF ST_AlarmPageRow;
-	nSelectedAlarm				: DINT;
+	nSelectedAlarm				: INT;
 END_VAR
 VAR
 	pAlarmArray					: POINTER TO ST_AlarmElement;
@@ -33,6 +33,8 @@ VAR
 	fbVFormatStr				: FB_VFormatStr;
 	// Index of the first alarm in the alarm array to be displayed
 	nFirstAlarmToDisplay		: DINT;
+	// Number of alarm selected in table
+	nSelectedAlarm_				: DINT;
 END_VAR
 VAR_TEMP
 	nPageLBound					: DINT;
@@ -75,48 +77,54 @@ IF NOT bEnable THEN
 	RETURN;
 END_IF
 
+// Get alarm number from FB input
+nSelectedAlarm_ := nSelectedAlarm;
+
 // Restrict index to the lower limit
-nSelectedAlarm := MAX(nPageLBound, nSelectedAlarm);
+nSelectedAlarm_ := MAX(nPageLBound, nSelectedAlarm_);
 // Restrict index to the upper limit
-nSelectedAlarm := MIN(nPageUBound, nSelectedAlarm);
+nSelectedAlarm_ := MIN(nPageUBound, nSelectedAlarm_);
 
 // Go to the first alarm
 IF fbFirstAlarmRTrig.Q THEN
 	nFirstAlarmToDisplay := 0;
-	nSelectedAlarm := nPageLBound;
+	nSelectedAlarm_ := nPageLBound;
 END_IF
 
 // Go to the last alarm
 IF fbLastAlarmRTrig.Q THEN
 	nFirstAlarmToDisplay := (nNumOfAlarms / nPageSize) * nPageSize;
-	nSelectedAlarm := MAX(nNumOfAlarms MOD nPageSize, 1);
+	nSelectedAlarm_ := MAX(nNumOfAlarms MOD nPageSize, 1);
 END_IF
 
 // Go to the previous alarm
 IF fbPrevAlarmRTrig.Q THEN
 	// Is the first alarm on the alarm page selected?
-	IF nSelectedAlarm <= nPageLBound THEN
+	IF nSelectedAlarm_ <= nPageLBound THEN
 		// Move displayed alarms backward by one
 		nFirstAlarmToDisplay := nFirstAlarmToDisplay - 1;
 	ELSE
 		// Select previous alarm
-		nSelectedAlarm := nSelectedAlarm - 1;
+		nSelectedAlarm_ := nSelectedAlarm_ - 1;
 	END_IF
 END_IF
 
 // Go to the next alarm
 IF fbNextAlarmRTrig.Q THEN
 	// Is the last alarm on the alarm page selected?
-	IF nSelectedAlarm >= nPageUBound THEN
+	IF nSelectedAlarm_ >= nPageUBound THEN
 		IF nNumOfAlarms > nPageSize THEN
 			// Move displayed alarms forward by one
 			nFirstAlarmToDisplay := nFirstAlarmToDisplay + 1;
 		END_IF
 	ELSE
 		// Select next alarm
-		nSelectedAlarm := nSelectedAlarm + 1;
+		nSelectedAlarm_ := nSelectedAlarm_ + 1;
 	END_IF
 END_IF
+
+// Return selected alarm back to the FB output
+nSelectedAlarm := DINT_TO_INT(nSelectedAlarm_);
 
 // Restrict alarm index to the upper limit
 nFirstAlarmToDisplay := MIN(nFirstAlarmToDisplay, nNumOfAlarms - 1);
@@ -158,8 +166,8 @@ FOR i := nPageLBound + nNumOfDisplayedAlarms TO nPageUBound DO
 END_FOR
 
 // Get context id of selected alarm
-IF nPageLBound <= nSelectedAlarm AND nSelectedAlarm <= nPageUBound THEN
-	nSelectedAlarmOffset := nSelectedAlarm - nPageLBound;
+IF nPageLBound <= nSelectedAlarm_ AND nSelectedAlarm_ <= nPageUBound THEN
+	nSelectedAlarmOffset := nSelectedAlarm_ - nPageLBound;
 	IF nSelectedAlarmOffset < nNumOfDisplayedAlarms THEN
 		nSelectedAlarmContextId := pAlarmArray[nFirstAlarmToDisplay + nSelectedAlarmOffset].nAlarmContextId;
 	END_IF
