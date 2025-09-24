@@ -26,110 +26,110 @@
     <CombineIds>false</CombineIds>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DUTs\E_AlarmSeverity.TcDUT">
+    <Compile Include="Alarms\DUTs\E_AlarmSeverity.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\E_ArgType.TcDUT">
+    <Compile Include="Alarms\DUTs\E_ArgType.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\ST_AlarmElement.TcDUT">
+    <Compile Include="Alarms\DUTs\ST_AlarmElement.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\ST_AlarmPageRow.TcDUT">
+    <Compile Include="Alarms\DUTs\ST_AlarmPageRow.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\ST_Arg.TcDUT">
+    <Compile Include="Alarms\DUTs\ST_Arg.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FBs\FB_Alarm.TcPOU">
+    <Compile Include="Alarms\FBs\FB_Alarm.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FBs\FB_AlarmArg.TcPOU">
+    <Compile Include="Alarms\FBs\FB_AlarmArg.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FBs\FB_AlarmBase.TcPOU">
+    <Compile Include="Alarms\FBs\FB_AlarmBase.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FBs\FB_AlarmContext.TcPOU">
+    <Compile Include="Alarms\FBs\FB_AlarmContext.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FBs\FB_ArgStack.TcPOU">
+    <Compile Include="Alarms\FBs\FB_ArgStack.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FBs\FB_RdArgStack.TcPOU">
+    <Compile Include="Alarms\FBs\FB_RdArgStack.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FBs\FB_SRAlarm.TcPOU">
+    <Compile Include="Alarms\FBs\FB_SRAlarm.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FBs\FB_SRAlarmArg.TcPOU">
+    <Compile Include="Alarms\FBs\FB_SRAlarmArg.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FBs\FB_VFormatStr.TcPOU">
+    <Compile Include="Alarms\FBs\FB_VFormatStr.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FBs\FB_WrArgStack.TcPOU">
+    <Compile Include="Alarms\FBs\FB_WrArgStack.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FUNs\A_BOOL.TcPOU">
+    <Compile Include="Alarms\FUNs\A_BOOL.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FUNs\A_BYTE.TcPOU">
+    <Compile Include="Alarms\FUNs\A_BYTE.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FUNs\A_DATE.TcPOU">
+    <Compile Include="Alarms\FUNs\A_DATE.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FUNs\A_DINT.TcPOU">
+    <Compile Include="Alarms\FUNs\A_DINT.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FUNs\A_DWORD.TcPOU">
+    <Compile Include="Alarms\FUNs\A_DWORD.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FUNs\A_INT.TcPOU">
+    <Compile Include="Alarms\FUNs\A_INT.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FUNs\A_LREAL.TcPOU">
+    <Compile Include="Alarms\FUNs\A_LREAL.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FUNs\A_REAL.TcPOU">
+    <Compile Include="Alarms\FUNs\A_REAL.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FUNs\A_SINT.TcPOU">
+    <Compile Include="Alarms\FUNs\A_SINT.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FUNs\A_STRING.TcPOU">
+    <Compile Include="Alarms\FUNs\A_STRING.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FUNs\A_TIME.TcPOU">
+    <Compile Include="Alarms\FUNs\A_TIME.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FUNs\A_UDINT.TcPOU">
+    <Compile Include="Alarms\FUNs\A_UDINT.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FUNs\A_UINT.TcPOU">
+    <Compile Include="Alarms\FUNs\A_UINT.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FUNs\A_USINT.TcPOU">
+    <Compile Include="Alarms\FUNs\A_USINT.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FUNs\A_WORD.TcPOU">
+    <Compile Include="Alarms\FUNs\A_WORD.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="GVLs\GVL.TcGVL">
+    <Compile Include="Alarms\GVLs\GVL_Alarms.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="Alarms\ITFs\I_Alarm.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Alarms\ITFs\I_AlarmContext.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Alarms\ITFs\I_AlarmTextList.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ImagePool_Alarms.TcIPO">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ITFs\I_Alarm.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ITFs\I_AlarmContext.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ITFs\I_AlarmTextList.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Memory\DUTs\ST_SIZE.TcDUT">
@@ -182,15 +182,16 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="DUTs" />
-    <Folder Include="FBs" />
-    <Folder Include="FUNs" />
-    <Folder Include="GVLs" />
+    <Folder Include="Alarms\DUTs" />
+    <Folder Include="Alarms\FBs" />
+    <Folder Include="Alarms\FUNs" />
+    <Folder Include="Alarms\GVLs" />
+    <Folder Include="Alarms\ITFs" />
     <Folder Include="IMAGEs" />
-    <Folder Include="ITFs" />
     <Folder Include="Memory" />
     <Folder Include="Memory\DUTs" />
     <Folder Include="Memory\FUNs" />
+    <Folder Include="Alarms" />
     <Folder Include="Version" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />
