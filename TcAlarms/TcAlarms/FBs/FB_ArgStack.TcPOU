@@ -112,10 +112,10 @@ END_VAR
 
 IF nStackMemorySize > 0 THEN
 	// Zero stack memory
-	MEMSET(
-		destAddr:= pStackMemory,
-		fillByte:= 0,
-		n:= DINT_TO_UDINT(nStackMemorySize));
+	F_MemSet(
+		pDestAddr:= pStackMemory,
+		nWithChar:= 0,
+		stDestSize:= DINT_TO_SIZE(nStackMemorySize));
 END_IF
 ]]></ST>
       </Implementation>

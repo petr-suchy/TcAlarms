@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="SIZE_TO_VALUE" Id="{51980fa8-0f07-4d81-9e8e-5dae7e881f2b}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION SIZE_TO_VALUE : UDINT
+VAR_INPUT
+	stSize : ST_SIZE;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[SIZE_TO_VALUE := stSize.nValue;
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

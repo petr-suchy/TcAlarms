@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="SINT_TO_SIZE" Id="{286ba010-8265-4011-b6eb-f18c5f24088f}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION SINT_TO_SIZE : ST_SIZE
+VAR_INPUT
+	nValue : SINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[SINT_TO_SIZE.nValue := SINT_TO_UDINT(MAX(0, nValue));]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

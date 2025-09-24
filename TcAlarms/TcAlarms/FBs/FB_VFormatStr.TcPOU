@@ -29,8 +29,13 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[fbRdArgStack.SetMemory(pArgStack, nStackSize);
+
 // Zero output string
-MEMSET(destAddr:= ADR(sOutput), fillByte:= 0, n:= SIZEOF(sOutput));
+F_MemSet(
+	pDestAddr:= ADR(sOutput),
+	nWithChar:= 0,
+	stDestSize:= UDINT_TO_SIZE(SIZEOF(sOutput)));
+
 // Get format string length
 nFormatLength := LEN(sFormat);
 

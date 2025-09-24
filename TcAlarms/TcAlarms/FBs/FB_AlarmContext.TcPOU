@@ -211,11 +211,11 @@ IF NOT IsAlarmBufferFull THEN
 	pAlarmArray[0].bCanByAcknowledged := FALSE;
 	
 	IF iAlarm.ArgStackMemoryPointer <> 0 AND iAlarm.ArgStackMemorySize > 0 THEN
-		F_SAFE_MEMCPY(
-			destAddr:= ADR(pAlarmArray[0].aArgStack),
-			nDestSize:= SIZEOF(pAlarmArray[0].aArgStack),
-			srcAddr:= iAlarm.ArgStackMemoryPointer,
-			nSrcSize:= iAlarm.ArgStackMemorySize);
+		F_MemCpy(
+			pDestAddr:= ADR(pAlarmArray[0].aArgStack),
+			stDestSize:= UDINT_TO_SIZE(SIZEOF(pAlarmArray[0].aArgStack)),
+			pSrcAddr:= iAlarm.ArgStackMemoryPointer,
+			stSrcSize:= DINT_TO_SIZE(iAlarm.ArgStackMemorySize));
 	END_IF
 
 	nNextContextId := nNextContextId + 1;
@@ -343,12 +343,11 @@ IF nArrayIndex > ALARM_INVALID_INDEX AND nArrayIndex < nNumOfAlarms THEN
 	pAlarmArray[nNumOfAlarms].nAlarmId := 0;
 	pAlarmArray[nNumOfAlarms].bCanByAcknowledged := FALSE;
 	
-	MEMSET(
-		destAddr:= ADR(pAlarmArray[nNumOfAlarms].aArgStack),
-		fillByte:= 0,
-		SIZEOF(pAlarmArray[nNumOfAlarms].aArgStack)
-	);
-	
+	F_MemSet(
+		pDestAddr:= ADR(pAlarmArray[nNumOfAlarms].aArgStack),
+		nWithChar:= 0,
+		stDestSize:= UDINT_TO_SIZE(SIZEOF(pAlarmArray[nNumOfAlarms].aArgStack)));
+
 	RemoveAlarm := TRUE;
 END_IF
 ]]></ST>

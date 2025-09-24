@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="INT_TO_SIZE" Id="{59e07e0d-ac6f-4417-ab3c-899d72e40b38}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION INT_TO_SIZE : ST_SIZE
+VAR_INPUT
+	nValue : INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[INT_TO_SIZE.nValue := INT_TO_UDINT(MAX(0, nValue));]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

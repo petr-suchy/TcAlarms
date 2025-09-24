@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="F_MemSet" Id="{c1895bf3-f291-4df4-aaea-289d57fc0128}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_MemSet : DINT
+VAR_INPUT
+	pDestAddr			: POINTER TO BYTE;
+	nWithChar			: BYTE;
+	stDestSize			: ST_SIZE;
+END_VAR
+VAR
+	nNumOfBytesToFill	: UDINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[nNumOfBytesToFill := SIZE_TO_VALUE(stDestSize);
+
+{IF defined (pou: MEMUtils.MemSet)}
+    // CODESYS implementation
+	MEMUtils.MemSet(
+		pbyBuffer := pDestAddr,
+		byValue := nWithChar,
+		dwSize := nNumOfBytesToFill);
+{ELSE}
+	// TwinCAT implementation
+	MEMSET(
+		destAddr:= pDestAddr,
+		fillByte:= nWithChar,
+		n:= nNumOfBytesToFill);
+{END_IF}
+
+F_MemSet := UDINT_TO_DINT(nNumOfBytesToFill);
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

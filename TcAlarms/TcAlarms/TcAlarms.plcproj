@@ -116,9 +116,6 @@
     <Compile Include="FUNs\A_WORD.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FUNs\F_SAFE_MEMCPY.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="GVLs\GVL.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
@@ -133,6 +130,45 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ITFs\I_AlarmTextList.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Memory\DUTs\ST_SIZE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Memory\FUNs\WORD_TO_SIZE.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Memory\FUNs\DINT_TO_SIZE.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Memory\FUNs\INT_TO_SIZE.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Memory\FUNs\F_MemCpy.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Memory\FUNs\F_MemSet.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Memory\FUNs\SINT_TO_SIZE.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Memory\FUNs\SIZE_TO_VALUE.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Memory\FUNs\UDINT_TO_SIZE.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Memory\FUNs\UINT_TO_SIZE.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Memory\FUNs\USINT_TO_SIZE.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Memory\FUNs\BYTE_TO_SIZE.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Memory\FUNs\DWORD_TO_SIZE.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PlcTask.TcTTO">
@@ -152,6 +188,9 @@
     <Folder Include="GVLs" />
     <Folder Include="IMAGEs" />
     <Folder Include="ITFs" />
+    <Folder Include="Memory" />
+    <Folder Include="Memory\DUTs" />
+    <Folder Include="Memory\FUNs" />
     <Folder Include="Version" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />

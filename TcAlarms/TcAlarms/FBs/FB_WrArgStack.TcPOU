@@ -46,11 +46,11 @@ ArgType := eArgType;
 ArgSize := nArgSize;
 
 // Write argument data to the stack memory
-F_SAFE_MEMCPY(
-	destAddr:= ArgDataPointer,
-	nDestSize:= MemorySize - ArgDataOffset,
-	srcAddr:= stArg.pData,
-	nSrcSize:= stArg.nSize);
+F_MemCpy(
+	pDestAddr:= ArgDataPointer,
+	stDestSize:= DINT_TO_SIZE(MemorySize - ArgDataOffset),
+	pSrcAddr:= stArg.pData,
+	stSrcSize:= BYTE_TO_SIZE(stArg.nSize));
 	
 // Add the header length and argument size to the current position in the stack memory
 nCurrOfsetInStack := nCurrOfsetInStack + ARG_HEADER_SIZE + nArgSize;

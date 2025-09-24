@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="DINT_TO_SIZE" Id="{ddc3b84f-bb2f-4c78-ba03-d96cfdee9268}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION DINT_TO_SIZE : ST_SIZE
+VAR_INPUT
+	nValue : DINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[DINT_TO_SIZE.nValue := DINT_TO_UDINT(MAX(0, nValue));]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

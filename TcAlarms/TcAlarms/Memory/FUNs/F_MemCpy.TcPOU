@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="F_MemCpy" Id="{56c31191-9ff7-4f18-aa4f-f4179c7f1b42}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_MemCpy : DINT
+VAR_INPUT
+	pDestAddr	: POINTER TO BYTE;
+	stDestSize	: ST_SIZE;
+	pSrcAddr	: POINTER TO BYTE;
+	stSrcSize	: ST_SIZE;
+END_VAR
+VAR
+	nNumOfBytesToCopy : UDINT;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[nNumOfBytesToCopy := MIN(SIZE_TO_VALUE(stDestSize), SIZE_TO_VALUE(stSrcSize));
+
+{IF defined (pou: MEMUtils.MemCpy)}
+    // CODESYS implementation
+	MEMUtils.MemCpy(
+		pbyDest := pDestAddr,
+		pbySrc := pSrcAddr,
+		dwSize := nNumOfBytesToCopy);
+{ELSE}
+	// TwinCAT implementation
+	MEMCPY(
+		destAddr:= pDestAddr,
+		srcAddr:= pSrcAddr,
+		n:= nNumOfBytesToCopy);
+{END_IF}
+
+F_MemCpy := UDINT_TO_DINT(nNumOfBytesToCopy);
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

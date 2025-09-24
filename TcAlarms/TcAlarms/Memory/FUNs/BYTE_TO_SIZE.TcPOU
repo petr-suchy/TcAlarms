@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="BYTE_TO_SIZE" Id="{b4ddb272-de98-4c80-8b4d-11faba84d6a1}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION BYTE_TO_SIZE : ST_SIZE
+VAR_INPUT
+	nValue : BYTE;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[BYTE_TO_SIZE.nValue := nValue;
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>
